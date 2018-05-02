@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9BC2C6B4-6A70-4A2F-B56E-CB977A26F3C8}</ProjectGuid>
-    <RootNamespace>RecastUnity</RootNamespace>
+    <ProjectGuid>{D97F47A2-77AC-4A7F-84EB-37D080767794}</ProjectGuid>
+    <RootNamespace>DllTest</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -74,26 +74,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\DebugUtils\Include;..\Detour\Include;..\DetourCrowd\Include;..\DetourTileCache\Include;..\Recast\Include;..\RecastDemo\Include;..\RecastDemo\Contrib\fastlz;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>..\RecastDemo\Build\vs2015\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DetourTileCache.lib;Detour.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\DebugUtils\Include;..\Detour\Include;..\DetourCrowd\Include;..\DetourTileCache\Include;..\Recast\Include;..\RecastDemo\Include;..\RecastDemo\Contrib\fastlz;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>..\RecastDemo\Build\vs2015\x64\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DetourTileCache.lib;Detour.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -122,14 +110,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="rcHelp.h" />
-    <ClInclude Include="rcQuery.h" />
+    <ClInclude Include="rcTest.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\RecastDemo\Contrib\fastlz\fastlz.c" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="rcHelp.cpp" />
-    <ClCompile Include="rcQuery.cpp" />
+    <ClCompile Include="rcTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

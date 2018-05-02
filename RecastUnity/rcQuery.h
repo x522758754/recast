@@ -3,6 +3,7 @@
 #include "DetourNavMesh.h"
 #include "DetourNavMeshQuery.h"
 
+
 /// These are just sample areas to use consistent values across the samples.
 /// The use should specify these base on his needs.
 
@@ -42,11 +43,11 @@ public:
 	///移除障碍物
 	void remove_obstacle(const float* pos);
 
-	///获得navmesh包含的三角形的数量
-	void get_triangles_count();
+	///获得构成navmesh的三角形顶点数量
+	int get_tri_vert_count();
 
-	///
-	void get_traiangle_vetex_pos(float* pos, int* count);
+	///获得构成navmesh的三角形顶点组成
+	void get_tri_vert_pos(float* pos);
 
 protected:
 	static const int MAX_POLYS = 256;
@@ -62,6 +63,7 @@ protected:
 
 	float m_polyPickExt[3];
 
+	//寻路相关
 	int m_straightPathOptions;
 	dtPolyRef m_polys[MAX_POLYS];
 	int m_nstraightPath;

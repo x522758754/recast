@@ -566,7 +566,6 @@ void rcQuery::add_obstacle(const unsigned char type, const float* pos)
 		bmax[0] = pos[0] + 0.5f;
 		bmax[1] = pos[1] + 0.5f;
 		bmax[2] = pos[2] + 0.5f;
-		
 		m_tileCache->addBoxObstacle(bmin, bmax, 0);
 	}
 
@@ -581,22 +580,59 @@ void rcQuery::remove_obstacle(const float* pos)
 	m_tileCache->removeObstacle(ref);
 }
 
-void rcQuery::get_traiangle_vetex_pos(float* vertexPos, int* vertCount)
+int rcQuery::get_tri_vert_count()
+{
+	int count = 0;
+	if (!m_navMesh)
+		return 0;
+	const dtNavMesh* navMesh = m_navMesh;
+
+	for (int a = 0; a != navMesh->getMaxTiles(); ++a)
+	{
+		const dtMeshTile* tile = navMesh->getTile(a);
+		if (!tile->header) continue;
+
+		for (int i = 0; i != tile->header->polyCount; ++i)
+		{
+			const dtPoly* p = &tile->polys[i];
+			if (p->getType() == DT_POLYTYPE_OFFMESH_CONNECTION) continue;
+
+			const dtPolyDetail* pd = &tile->detailMeshes[i];
+			for (int j = 0; j != pd->triCount; ++j)
+			{
+				for (int k = 0; k < 3; ++k)
+				{
+					const unsigned char* t = &tile->detailTris[(pd->triBase + j) * 4];
+					if (t[k] < p->vertCount)
+					{
+						count++;
+					}
+				}
+			}
+		}
+	}
+
+	return count;
+}
+
+void rcQuery::get_tri_vert_pos(float* vertexPos)
 {
 	const dtNavMesh* navMesh = m_navMesh;
-	if (vertexPos)
+	if (!vertexPos || !navMesh)
 	{
 		return;
 	}
-	if (vertCount)
-		*vertCount = 0;
-
+	int vertCount = 0;
 	for (int a=0; a != navMesh->getMaxTiles(); ++a)
 	{
 		const dtMeshTile* tile = navMesh->getTile(a);
+		if (!tile->header) continue;
+
 		for (int i=0; i != tile->header->polyCount; ++i)
 		{
 			const dtPoly* p = &tile->polys[i];
+			if (p->getType() == DT_POLYTYPE_OFFMESH_CONNECTION) continue;
+
 			const dtPolyDetail* pd = &tile->detailMeshes[i];
 			for (int j=0; j != pd->triCount; ++j)
 			{
@@ -610,8 +646,8 @@ void rcQuery::get_traiangle_vetex_pos(float* vertexPos, int* vertCount)
 																					   //tile->verts[p->verts[t[k]]*3]	-- 查询当前MeshTile中对应的位置信息
 					if (t[k] < p->vertCount)
 					{
-						dtVcopy(vertexPos + *vertCount * 3, &tile->verts[p->verts[t[k]] * 3]);
-						*vertCount ++;
+						dtVcopy(vertexPos + vertCount * 3, &tile->verts[p->verts[t[k]] * 3]);
+						vertCount++;
 					}
 				}
 			}

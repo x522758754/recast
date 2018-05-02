@@ -1,0 +1,57 @@
+cellSize: 体素（网格）的宽度(x-axis)、深度(z-axis)
+
+cellHeight: 体素(网格)的高度(y-axis)
+
+floor: open span的体素min面且相邻的solid span的max面 注：如果cell column没有solid span，也不会有open span.
+
+minTraversableHeight: 表示区间(floor -> celling)可以行走的最小高度（同一heightfield的cell column下, celling 减去 floor的值,不小于该值则可以行走）
+
+maxTraversableStep: 最大可行走的边缘高度;紧挨的两个cell column的floor的高度差小于此值则可以行走
+
+maxTraversableSlope: 最大可行走的斜坡角度
+
+clipLedges: 边缘突出部分是否可以行走
+
+traversableAreaBorderSize: 该值大于0，可行走区域与阻挡物之前的距离大小
+
+smoothingThreshold: 生成区域时，光滑化程度
+
+useConservativeExpansion: 应用一些算法来避免产生残缺的区域
+
+minUnconnectedRegionSize:生成navmesh之前，小于该值的region将会被剔除
+
+mergeRegionSize:如果可以的话，任何小于该值的region，将会与更大的region合并
+
+maxEdgeLeghth: 多边形网格的最大边长
+
+edgeMaxDeviation: navmesh的边与源几何最大偏离距离
+
+maxVertsPerPoly: 在体素转换成多边形的过程中，生成的多边行可拥有最大顶点数。
+
+contourSampleDistance：设置采样距离,在匹配源几何表面生成细节Mesh是使用。
+
+contourMaxDeviation:生成表面细节Mesh与原始几何的最大距离。
+
+
+---------------------------------------------
+---------------------------------------------
+
+region generation
+
+
+Regions: 可移动的表面区域的连续区间,用来构造简单多边形投影在xz面上
+
+相邻column被认为相邻span需满足：
+1. 两个open span的floor差要小于 maxTraversableStep
+2. 两个open span的gap( = min(celling1, celling2) - max(floor1, floor2))要小于maxTraversableStep
+
+
+----------------------------------------------
+----------------------------------------------
+
+Detour
+
+----------------------------------------------
+----------------------------------------------
+
+voxelization	solid heightfield	open(compact)heightfield	Regions 	contour 	polymesh 	polydetailmesh

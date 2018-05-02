@@ -15,24 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="rcQuery.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="rcHelp.h">
+    <ClInclude Include="rcTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="rcQuery.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\RecastDemo\Contrib\fastlz\fastlz.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="rcHelp.cpp">
+    <ClCompile Include="rcTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
