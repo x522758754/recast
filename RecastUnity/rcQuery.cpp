@@ -654,3 +654,31 @@ void rcQuery::get_tri_vert_pos(float* vertexPos)
 		}
 	}
 }
+
+int rcQuery::get_ob_count()
+{
+	int count = 0;
+	if (!m_tileCache)
+		return 0;
+	for (int i = 0; i < m_tileCache->getObstacleCount(); ++i)
+	{
+		const dtTileCacheObstacle* ob = m_tileCache->getObstacle(i);
+		if (ob->state == DT_OBSTACLE_EMPTY) continue;
+		if (ob->type == DT_OBSTACLE_CYLINDER) count++;
+	}
+
+	return count;
+}
+
+void rcQuery::get_ob_info(float* pos)
+{
+	if (!m_tileCache || !pos)
+		return;
+	for (int i = 0; i < m_tileCache->getObstacleCount(); ++i)
+	{
+		const dtTileCacheObstacle* ob = m_tileCache->getObstacle(i);
+		if (ob->state == DT_OBSTACLE_EMPTY) continue;
+		if (ob->type == DT_OBSTACLE_CYLINDER)
+			dtVcopy(pos + i * 3, ob->cylinder.pos);
+	}
+}

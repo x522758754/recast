@@ -671,7 +671,7 @@ void drawObstacles(duDebugDraw* dd, const dtTileCache* tc)
 			col = duRGBA(220,0,0,128);
 
 		duDebugDrawCylinder(dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], col);
-		duDebugDrawCylinderWire(dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], duDarkenCol(col), 2);
+		//duDebugDrawCylinderWire(dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], duDarkenCol(col), 2);
 	}
 }
 
@@ -1143,13 +1143,13 @@ void Sample_TempObstacles::handleRender()
 	}
 	
 	
-// 	glDepthMask(GL_TRUE);
-// 		
-// 	m_geom->drawConvexVolumes(&m_dd);
-// 	
-// 	if (m_tool)
-// 		m_tool->handleRender();
-// 	renderToolStates();
+	glDepthMask(GL_TRUE);
+		
+	m_geom->drawConvexVolumes(&m_dd);
+	
+	if (m_tool)
+		m_tool->handleRender();
+	renderToolStates();
 	
 	glDepthMask(GL_TRUE);
 }

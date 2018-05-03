@@ -19,8 +19,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RecastUnity", "..\..\..\RecastUnity\RecastUnity.vcxproj", "{9BC2C6B4-6A70-4A2F-B56E-CB977A26F3C8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DllTest", "..\DllTest\DllTest.vcxproj", "{D97F47A2-77AC-4A7F-84EB-37D080767794}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -84,14 +82,6 @@ Global
 		{9BC2C6B4-6A70-4A2F-B56E-CB977A26F3C8}.Release|Win32.Build.0 = Release|Win32
 		{9BC2C6B4-6A70-4A2F-B56E-CB977A26F3C8}.Release|x64.ActiveCfg = Release|x64
 		{9BC2C6B4-6A70-4A2F-B56E-CB977A26F3C8}.Release|x64.Build.0 = Release|x64
-		{D97F47A2-77AC-4A7F-84EB-37D080767794}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D97F47A2-77AC-4A7F-84EB-37D080767794}.Debug|Win32.Build.0 = Debug|Win32
-		{D97F47A2-77AC-4A7F-84EB-37D080767794}.Debug|x64.ActiveCfg = Debug|x64
-		{D97F47A2-77AC-4A7F-84EB-37D080767794}.Debug|x64.Build.0 = Debug|x64
-		{D97F47A2-77AC-4A7F-84EB-37D080767794}.Release|Win32.ActiveCfg = Release|Win32
-		{D97F47A2-77AC-4A7F-84EB-37D080767794}.Release|Win32.Build.0 = Release|Win32
-		{D97F47A2-77AC-4A7F-84EB-37D080767794}.Release|x64.ActiveCfg = Release|x64
-		{D97F47A2-77AC-4A7F-84EB-37D080767794}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

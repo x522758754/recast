@@ -49,6 +49,11 @@ public:
 	///获得构成navmesh的三角形顶点组成
 	void get_tri_vert_pos(float* pos);
 
+	///暂时只获取圆柱的障碍物
+	int get_ob_count();
+
+	void get_ob_info(float* pos);
+
 protected:
 	static const int MAX_POLYS = 256;
 
