@@ -17,10 +17,10 @@ public:
 	void initConfig();
 
 	/// 加载navmesh bin文件
-	void load_map_bin(const std::string& path);
+	bool load_map_bin(const std::string& path);
 
 	///加载障碍物文件
-	void load_obs_bin(const std::string& path) const;
+	bool load_obs_bin(const std::string& path) const;
 
 	///保存障碍物文件
 	void save_obs_bin(const std::string& path) const;

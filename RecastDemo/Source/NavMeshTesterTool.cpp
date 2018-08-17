@@ -687,6 +687,9 @@ void NavMeshTesterTool::recalc()
 	else
 		m_startRef = 0;
 	
+	m_epos[0] = 36.f;
+	m_epos[1] = -2.2f;
+	m_epos[2] = -10.1f;
 	if (m_eposSet)
 		m_navQuery->findNearestPoly(m_epos, m_polyPickExt, &m_filter, &m_endRef, 0);
 	else

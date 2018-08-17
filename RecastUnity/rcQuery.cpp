@@ -283,11 +283,11 @@ void rcQuery::initConfig()
 
 }
 
-void rcQuery::load_map_bin(const std::string& path)
+bool rcQuery::load_map_bin(const std::string& path)
 {
 	FILE* fp;
 	fopen_s(&fp, path.c_str(), "rb");
-	if (!fp) return;
+	if (!fp) return false;
 
 	TileCacheSetHeader header;
 	size_t headerReadReturnCode = fread(&header, sizeof(TileCacheSetHeader), 1, fp);
@@ -296,7 +296,7 @@ void rcQuery::load_map_bin(const std::string& path)
 		header.version != TILECACHESET_VERSION)
 	{
 		fclose(fp);
-		return;
+		return false;
 	}
 	
 	m_navMesh = dtAllocNavMesh();
@@ -304,14 +304,14 @@ void rcQuery::load_map_bin(const std::string& path)
 	if (!m_navMesh || !m_tileCache)
 	{
 		fclose(fp);
-		return;
+		return false;
 	}
 
 	dtStatus status = m_navMesh->init(&header.meshParams);
 	if (dtStatusFailed(status))
 	{
 		fclose(fp);
-		return;
+		return false;
 	}
 
 	status = m_tileCache->init(&header.cacheParams, m_talloc, m_tcomp, m_tmproc);
@@ -351,22 +351,24 @@ void rcQuery::load_map_bin(const std::string& path)
 	fclose(fp);
 
 	m_navQuery->init(m_navMesh, 2048);
+
+	return true;
 }
 
-void rcQuery::load_obs_bin(const std::string& path) const
+bool rcQuery::load_obs_bin(const std::string& path) const
 {
-	if (!m_tileCache) return;
+	if (!m_tileCache) return false;
 
 	FILE* fp;
 	fopen_s(&fp, path.c_str(), "rb");
-	if (!fp) return;
+	if (!fp) return false;
 
 	int count;
 	size_t headerReadReturnCode = fread(&count, sizeof(unsigned int), 1, fp);
 	if (headerReadReturnCode != 1)
 	{
 		fclose(fp);
-		return;
+		return false;
 	}
 
 	for (int i = 0; i != count; ++i)
@@ -376,7 +378,7 @@ void rcQuery::load_obs_bin(const std::string& path) const
 		if (obHeaderReadReturnCode != 1)
 		{
 			fclose(fp);
-			return;
+			return false;
 		}
 		if (!obHeader.obRef) break;
 		switch (obHeader.type)
@@ -394,6 +396,8 @@ void rcQuery::load_obs_bin(const std::string& path) const
 		}
 	}
 	fclose(fp);
+
+	return true;
 }
 
 void rcQuery::save_obs_bin(const std::string& path) const
