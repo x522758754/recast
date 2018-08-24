@@ -273,6 +273,7 @@ rcQuery::rcQuery() :
 rcQuery::~rcQuery()
 {
 	dtFreeNavMesh(m_navMesh);
+	dtFreeTileCache(m_tileCache);
 	m_navMesh = 0;
 	m_tileCache = 0;
 	m_navMesh = 0;
@@ -324,7 +325,7 @@ bool rcQuery::load_map_bin(const std::string& path)
 		if (tileHeaderReadReturnCode != 1)
 		{
 			fclose(fp);
-			return;
+			return false;
 		}
 		if(!tileHeader.tileRef || !tileHeader.dataSize)
 			break;
@@ -336,7 +337,7 @@ bool rcQuery::load_map_bin(const std::string& path)
 		{
 			dtFree(data);
 			fclose(fp);
-			return;
+			return false;
 		}
 
 		dtCompressedTileRef tile = 0;
@@ -351,6 +352,14 @@ bool rcQuery::load_map_bin(const std::string& path)
 	fclose(fp);
 
 	m_navQuery->init(m_navMesh, 2048);
+
+	return true;
+}
+
+bool rcQuery::release_map_bin()
+{
+	dtFreeNavMesh(m_navMesh);
+	dtFreeTileCache(m_tileCache);
 
 	return true;
 }
@@ -465,7 +474,7 @@ bool rcQuery::is_valid_point(const float* pos) const
 	return dtStatusSucceed(status) && targetRef > 0;
 }
 
-void rcQuery::raycast(const float* spos, const float* epos, float* path)
+void rcQuery::raycast(const float* spos, const float* epos, float* hitPos, float*hitNormal)
 {
 	dtPolyRef startRef;
 	//dtPolyRef endRef;
@@ -477,7 +486,6 @@ void rcQuery::raycast(const float* spos, const float* epos, float* path)
 		float t = 0;
 		float hitNoraml[3];
 		int npolys = 0;
-		float hitPos[3];
 
 		m_navQuery->raycast(startRef, spos, epos, &m_filter, &t, hitNoraml, m_polys, &npolys, MAX_POLYS);
 		if (t > 1) // No hit
@@ -550,38 +558,33 @@ void rcQuery::get_point_y(const float* pos, float* height) const
 	}
 }
 
-void rcQuery::add_obstacle(const unsigned char type, const float* pos)
-{
-	if (!m_tileCache) return;
-	
-	float p[3];
-	dtVcopy(p, pos);
-	if (DT_OBSTACLE_CYLINDER == type)
-	{
-		p[1] = -0.5f;
-		m_tileCache->addObstacle(pos, 1.0, 2.0f, 0);
-	}
-	else if (DT_OBSTACLE_BOX == type)
-	{
-		float bmin[3], bmax[3];
-		bmin[0] = pos[0] - 0.5f;
-		bmin[1] = pos[1] - 0.5f;
-		bmin[2] = pos[2] - 0.5f;
-		bmax[0] = pos[0] + 0.5f;
-		bmax[1] = pos[1] + 0.5f;
-		bmax[2] = pos[2] + 0.5f;
-		m_tileCache->addBoxObstacle(bmin, bmax, 0);
-	}
 
+bool rcQuery::add_box_obstacle(const float* bmin, const float*bmax)
+{
+	if (!m_tileCache) return false;
+
+	 return DT_SUCCESS == m_tileCache->addBoxObstacle(bmin, bmax, 0);
 }
 
-void rcQuery::remove_obstacle(const float* pos)
+bool rcQuery::remove_box_obstacle(const float* bmin, const float* bmax)
+{
+	if (!m_tileCache) return false;
+
+	dtObstacleRef ref = hitTestObstacle(m_tileCache, bmin, bmax);
+
+	return DT_SUCCESS == m_tileCache->removeObstacle(ref);
+}
+
+void rcQuery::remove_all_box_obstacle()
 {
 	if (!m_tileCache) return;
 
-	dtObstacleRef ref = hitTestObstacle(m_tileCache, pos, pos);
-
-	m_tileCache->removeObstacle(ref);
+	for (int i=0; i < m_tileCache->getObstacleCount(); ++i)
+	{
+		const dtTileCacheObstacle* ob = m_tileCache->getObstacle(i);
+		if(ob->state == DT_OBSTACLE_EMPTY) continue;
+		m_tileCache->removeObstacle(m_tileCache->getObstacleRef(ob));
+	}
 }
 
 int rcQuery::get_tri_vert_count()
@@ -659,7 +662,7 @@ void rcQuery::get_tri_vert_pos(float* vertexPos)
 	}
 }
 
-int rcQuery::get_ob_count()
+int rcQuery::get_ob_box_count()
 {
 	int count = 0;
 	if (!m_tileCache)
@@ -668,21 +671,26 @@ int rcQuery::get_ob_count()
 	{
 		const dtTileCacheObstacle* ob = m_tileCache->getObstacle(i);
 		if (ob->state == DT_OBSTACLE_EMPTY) continue;
-		if (ob->type == DT_OBSTACLE_CYLINDER) count++;
+		if (ob->type == DT_OBSTACLE_CYLINDER) continue;
+		if (ob->type == DT_OBSTACLE_BOX) count++;
 	}
 
 	return count;
 }
 
-void rcQuery::get_ob_info(float* pos)
+void rcQuery::get_ob_boxs(float* bmin, float*bmax)
 {
-	if (!m_tileCache || !pos)
+	if (!m_tileCache || !bmin ||!bmax)
 		return;
 	for (int i = 0; i < m_tileCache->getObstacleCount(); ++i)
 	{
 		const dtTileCacheObstacle* ob = m_tileCache->getObstacle(i);
 		if (ob->state == DT_OBSTACLE_EMPTY) continue;
-		if (ob->type == DT_OBSTACLE_CYLINDER)
-			dtVcopy(pos + i * 3, ob->cylinder.pos);
+		if (ob->type == DT_OBSTACLE_CYLINDER) continue;
+		if (ob->type == DT_OBSTACLE_BOX)
+		{
+			dtVcopy(bmin + i * 3, ob->box.bmin);
+			dtVcopy(bmax + i * 3, ob->box.bmax);
+		}
 	}
 }
